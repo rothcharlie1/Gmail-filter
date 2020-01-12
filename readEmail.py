@@ -1,4 +1,4 @@
-from email.mime.text import MIMEText
+#from email.mime.text import MIMEText
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
@@ -53,6 +53,39 @@ def content_filter(mesg):
     print(subject_val)
     print(snippet_val)
     print()
+
+def ModifyMessage(service, user_id, msg_id, msg_labels):
+  """Modify the Labels on the given Message.
+
+  Args:
+    service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+    msg_id: The id of the message required.
+    msg_labels: The change in labels.
+
+  Returns:
+    Modified message, containing updated labelIds, id and threadId.
+  """
+  try:
+    message = service.users().messages().modify(userId=user_id, id=msg_id,
+                                                body=msg_labels).execute()
+
+    label_ids = message['labelIds']
+
+    print('Message ID: %s - With Label IDs %s' % (msg_id, label_ids))
+    return message
+  except errors.HttpError as error:
+    print ('An error occurred: %s' % error)
+
+
+def CreateMsgLabels():
+  """Create object to update labels.
+
+  Returns:
+    A label update object.
+  """
+  return {'removeLabelIds': [], 'addLabelIds': ['UNREAD', 'INBOX', 'Label_2']}
 
 
     
