@@ -152,7 +152,7 @@ def edu_search():
   test = []
   for From in FromList:
     add = From.find('.edu')
-    if add != =1:
+    if add != -1:
       print(From)
     # test.append(add)
   # print(test)
