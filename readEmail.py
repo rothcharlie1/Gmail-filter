@@ -11,6 +11,7 @@ SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
 
 def main():
    importer()
+   print(ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me'))
    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=CreateMsgLabels())
 
 def importer():
@@ -123,15 +124,15 @@ def MakeLabel(label_name, mlv='show', llv='labelShow'):
            'labelListVisibility': llv}
   return label
 
-  def ListLabels(service, user_id):
-    try:
-      response = service.users().labels().list(userId=user_id).execute()
-      labels = response['labels']
-      for label in labels:
-        print('Label id: %s - Label name: %s' % (label['id'], label['name']))
-      return labels
-    except errors.HttpError as error:
-      print ('An error occurred: %s' % error)
+def ListLabels(service, user_id):
+  try:
+    response = service.users().labels().list(userId=user_id).execute()
+    labels = response['labels']
+    for label in labels:
+      print('Label id: %s - Label name: %s' % (label['id'], label['name']))
+    return labels
+  except errors.HttpError as error:
+    print ('An error occurred: %s' % error)
 
             
 if __name__ == '__main__':
