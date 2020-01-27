@@ -103,7 +103,7 @@ def CreateLabel(service, user_id, label_object):
     print(label['id'])
     return label
   except errors.HttpError as error:
-    print 'An error occurred: %s' % error
+    print ('An error occurred: %s' % error)
 
 
 def MakeLabel(label_name, mlv='show', llv='labelShow'):
