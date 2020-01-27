@@ -139,7 +139,7 @@ def MakeLabel(label_name, mlv='show', llv='labelShow'):
     for label in labels:
       print 'Label id: %s - Label name: %s' % (label['id'], label['name'])
     return labels
-  except errors.HttpError, error:
+  except errors.HttpError as error:
     print ('An error occurred: %s' % error)
 
             
