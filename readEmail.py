@@ -49,10 +49,10 @@ def content_filter(mesg):
 
     snippet_val = mesg['snippet'] #gets snippet
     
-    print(from_val) #outputs the 3 parameters of each email
-    print(subject_val)
-    print(snippet_val)
-    print()
+    # print(from_val) #outputs the 3 parameters of each email
+    # print(subject_val)
+    # print(snippet_val)
+    # print()
 
 def ModifyMessage(service, user_id, msg_id, msg_labels):
   """Modify the Labels on the given Message.
@@ -68,8 +68,7 @@ def ModifyMessage(service, user_id, msg_id, msg_labels):
     Modified message, containing updated labelIds, id and threadId.
   """
   try:
-    message = service.users().messages().modify(userId=user_id, id=msg_id,
-                                                body=msg_labels).execute()
+    message = service.users().messages().modify(userId=user_id, id=msg_id, body=msg_labels).execute()
 
     label_ids = message['labelIds']
 
