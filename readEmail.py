@@ -19,7 +19,8 @@ def main():
     if i == 'College':
       College = True
   if College == False:
-    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=CreateMsgLabels())
+    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=MakeLabel(label_name='College', mlv='show', llv='labelShow'))
+    # CreateMsgLabels()
 
 def importer():
     store = file.Storage('token.json')
@@ -93,7 +94,7 @@ def CreateMsgLabels():
   Returns:
     A label update object.
   """
-  return {'removeLabelIds': [], 'addLabelIds': ['UNREAD', 'INBOX', 'Label_2']}
+  return {'removeLabelIds': [], 'addLabelIds': ['College']}
 
 def CreateLabel(service, user_id, label_object):
   """Creates a new label within user's mailbox, also prints Label ID.
