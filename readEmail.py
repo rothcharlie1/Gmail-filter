@@ -20,8 +20,6 @@ def main():
       College = True
   if College == False:
     CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=CreateMsgLabels())
-  elif College == True:
-    print('IT WORKS')
 
 def importer():
     store = file.Storage('token.json')
