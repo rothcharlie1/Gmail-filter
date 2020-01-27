@@ -11,6 +11,9 @@ SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
 
 def main():
    importer()
+   CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=CreateMsgLabels())
+
+
 
 def importer():
     store = file.Storage('token.json')
@@ -49,10 +52,10 @@ def content_filter(mesg):
 
     snippet_val = mesg['snippet'] #gets snippet
     
-    print(from_val) #outputs the 3 parameters of each email
-    print(subject_val)
-    print(snippet_val)
-    print()
+    # print(from_val) #outputs the 3 parameters of each email
+    # print(subject_val)
+    # print(snippet_val)
+    # print()
 
 def ModifyMessage(service, user_id, msg_id, msg_labels):
   """Modify the Labels on the given Message.
@@ -103,7 +106,7 @@ def CreateLabel(service, user_id, label_object):
     print(label['id'])
     return label
   except errors.HttpError as error:
-    print 'An error occurred: %s' % error
+    print('An error occurred: %s' % error)
 
 
 def MakeLabel(label_name, mlv='show', llv='labelShow'):
