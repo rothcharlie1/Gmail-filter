@@ -9,18 +9,22 @@ from email.mime.text import MIMEText
 
 SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
 
+FromList = []
 labelsID = []
 
 def main():
   importer()
   ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me')
   College = False
-  for i in labelsID:
+
+  for i in labelsID: # Finds if there is already a label that has been named "College"
     if i == 'College':
       College = True
-  if College == False:
+  if College == False: # Creates a "College" label if it is not already a label
     CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=MakeLabel(label_name='College', mlv='show', llv='labelShow'))
     # CreateMsgLabels()
+  # print(FromList)
+  edu_search()
 
 def importer():
     store = file.Storage('token.json')
@@ -53,6 +57,8 @@ def content_filter(mesg):
     
   from_index = find_index(separated_list, 'name', 'From') 
   from_val = mesg['payload']['headers'][from_index]['value'] #gets where mail is from
+
+  FromList.append(from_val)
 
   subject_index = find_index(separated_list, 'name', 'Subject') #gets subject
   subject_val = mesg['payload']['headers'][subject_index]['value']
@@ -141,6 +147,17 @@ def ListLabels(service, user_id):
     return labels
   except errors.HttpError as error:
     print ('An error occurred: %s' % error)
+
+def edu_search():
+  test = []
+  for From in FromList:
+    add = From.find('.edu')
+    if add != =1:
+      print(From)
+    # test.append(add)
+  # print(test)
+
+
 
             
 if __name__ == '__main__':
