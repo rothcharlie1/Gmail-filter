@@ -13,8 +13,6 @@ def main():
    importer()
    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=CreateMsgLabels())
 
-
-
 def importer():
     store = file.Storage('token.json')
     creds = store.get()
@@ -126,24 +124,14 @@ def MakeLabel(label_name, mlv='show', llv='labelShow'):
   return label
 
   def ListLabels(service, user_id):
-  """Get a list all labels in the user's mailbox.
-
-  Args:
-    service: Authorized Gmail API service instance.
-    user_id: User's email address. The special value "me"
-    can be used to indicate the authenticated user.
-
-  Returns:
-    A list all Labels in the user's mailbox.
-  """
-  try:
-    response = service.users().labels().list(userId=user_id).execute()
-    labels = response['labels']
-    for label in labels:
-      print 'Label id: %s - Label name: %s' % (label['id'], label['name'])
-    return labels
-  except errors.HttpError as error:
-    print ('An error occurred: %s' % error)
+    try:
+      response = service.users().labels().list(userId=user_id).execute()
+      labels = response['labels']
+      for label in labels:
+        print('Label id: %s - Label name: %s' % (label['id'], label['name']))
+      return labels
+    except errors.HttpError as error:
+      print ('An error occurred: %s' % error)
 
             
 if __name__ == '__main__':
