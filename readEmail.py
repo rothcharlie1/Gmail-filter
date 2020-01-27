@@ -110,7 +110,7 @@ def CreateLabel(service, user_id, label_object):
   """
   try:
     label = service.users().labels().create(userId=user_id, body=label_object).execute()
-    print(label['id'])
+    # print(label['id'])
     return label
   except errors.HttpError as error:
     print('An error occurred: %s' % error)
