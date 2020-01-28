@@ -6,6 +6,7 @@ import base64
 from apiclient import errors
 from httplib2 import Http
 from email.mime.text import MIMEText
+import parseEmail
 
 SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
 
@@ -14,16 +15,7 @@ labelsID = []
 
 def main():
   importer()
-  ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me')
-  College = False
-
-  for i in labelsID: # Finds if there is already a label that has been named "College"
-    if i == 'College':
-      College = True
-  if College == False: # Creates a "College" label if it is not already a label
-    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=MakeLabel(label_name='College', mlv='show', llv='labelShow'))
-  # edu_search()
-  print(FromList)
+  parseEmail.college_label()
 
 
 def importer():
@@ -148,12 +140,7 @@ def ListLabels(service, user_id):
   except errors.HttpError as error:
     print ('An error occurred: %s' % error)
 
-def edu_search(): # Searches for ".edu" in email address
-  test = []
-  for From in FromList:
-    add = From.find('.edu')
-    if add != -1:
-      print(From)
+
 
 
 
