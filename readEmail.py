@@ -1,4 +1,4 @@
-#from email.mime.text import MIMEText
+# from email.mime.text import MIMEText
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
@@ -14,9 +14,15 @@ FromList = {}
 labelsID = []
 
 def main():
+  # parseEmail.college_label()
   importer()
+  # print(FromList)
   parseEmail.college_label()
+  blah()
+  # print(FromList)
 
+def blah():
+  print(FromList)
 
 def importer():
     store = file.Storage('token.json')
