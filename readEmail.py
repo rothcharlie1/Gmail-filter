@@ -12,7 +12,7 @@ SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
 def main():
    importer()
    print(ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me'))
-   CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=CreateMsgLabels())
+  #  CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=CreateMsgLabels())
 
 def importer():
     store = file.Storage('token.json')
