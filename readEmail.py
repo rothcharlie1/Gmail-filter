@@ -9,17 +9,29 @@ from email.mime.text import MIMEText
 
 SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
 
+FromList = {}
+labelsID = []
+
 def main():
-   importer()
-   print(ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me'))
-  #  CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=CreateMsgLabels())
+  importer()
+  ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me')
+  College = False
+
+  for i in labelsID: # Finds if there is already a label that has been named "College"
+    if i == 'College':
+      College = True
+  if College == False: # Creates a "College" label if it is not already a label
+    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=MakeLabel(label_name='College', mlv='show', llv='labelShow'))
+  # edu_search()
+  print(FromList)
+
 
 def importer():
     store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('client_secret_44702673440-vq3k3r554g4oh4lod094kl1okbmga5c7.apps.googleusercontent.com.json', SCOPES)  #i think this part establishes the connection between the program and the email and does authorization
-        creds = tools.run_flow(flow, store)
+      flow = client.flow_from_clientsecrets('client_secret_44702673440-vq3k3r554g4oh4lod094kl1okbmga5c7.apps.googleusercontent.com.json', SCOPES)  #i think this part establishes the connection between the program and the email and does authorization
+      creds = tools.run_flow(flow, store)
     service = build('gmail', 'v1', http=creds.authorize(Http()))
      # Call the Gmail API to fetch INBOX
     results = service.users().messages().list(userId='me',labelIds = ['INBOX']).execute()  #fetches messages
@@ -27,34 +39,36 @@ def importer():
 
     idList = []  
     if not messages:
-        print ("No messages found.")
+      print ("No messages found.")
     else:
-        for message in messages:
-            msg = service.users().messages().get(userId='me', id=message['id']).execute()  #loop through all messages, pull out message, add id to the list of ids, and run the content filter
-            idList.append(message['id'])
-            content_filter(msg)
+      for message in messages:
+        msg = service.users().messages().get(userId='me', id=message['id']).execute()  #loop through all messages, pull out message, add id to the list of ids, and run the content filter
+        idList.append(message['id'])
+        content_filter(msg)
   
 def find_index(lst, key, value): #this method finds a specific value for a specific key in a list and returns the index of it
     for i, dic in enumerate(lst):
-        if dic[key] == value:
-            return i
+      if dic[key] == value:
+        return i
     return None
 
 def content_filter(mesg):    
-    separated_list = mesg['payload']['headers'] #location of list of headers
+  separated_list = mesg['payload']['headers'] #location of list of headers
     
-    from_index = find_index(separated_list, 'name', 'From') 
-    from_val = mesg['payload']['headers'][from_index]['value'] #gets where mail is from
+  from_index = find_index(separated_list, 'name', 'From') 
+  from_val = mesg['payload']['headers'][from_index]['value'] #gets where mail is from
 
-    subject_index = find_index(separated_list, 'name', 'Subject') #gets subject
-    subject_val = mesg['payload']['headers'][subject_index]['value']
+  subject_index = find_index(separated_list, 'name', 'Subject') #gets subject
+  subject_val = mesg['payload']['headers'][subject_index]['value']
 
-    snippet_val = mesg['snippet'] #gets snippet
+  snippet_val = mesg['snippet'] #gets snippet
+
+  FromList.update({from_val : id}) # Appends email address and id , DOES NOT WORK
     
-    # print(from_val) #outputs the 3 parameters of each email
-    # print(subject_val)
-    # print(snippet_val)
-    # print()
+  # print(from_val) #outputs the 3 parameters of each email
+  # print(subject_val)
+  # print(snippet_val)
+  # print()
 
 def ModifyMessage(service, user_id, msg_id, msg_labels):
   """Modify the Labels on the given Message.
@@ -86,7 +100,7 @@ def CreateMsgLabels():
   Returns:
     A label update object.
   """
-  return {'removeLabelIds': [], 'addLabelIds': ['UNREAD', 'INBOX', 'Label_2']}
+  return {'removeLabelIds': [], 'addLabelIds': ['College']}
 
 def CreateLabel(service, user_id, label_object):
   """Creates a new label within user's mailbox, also prints Label ID.
@@ -102,7 +116,7 @@ def CreateLabel(service, user_id, label_object):
   """
   try:
     label = service.users().labels().create(userId=user_id, body=label_object).execute()
-    print(label['id'])
+    # print(label['id'])
     return label
   except errors.HttpError as error:
     print('An error occurred: %s' % error)
@@ -129,10 +143,19 @@ def ListLabels(service, user_id):
     response = service.users().labels().list(userId=user_id).execute()
     labels = response['labels']
     for label in labels:
-      print('Label id: %s - Label name: %s' % (label['id'], label['name']))
+      labelsID.append(label['name'])
     return labels
   except errors.HttpError as error:
     print ('An error occurred: %s' % error)
+
+def edu_search(): # Searches for ".edu" in email address
+  test = []
+  for From in FromList:
+    add = From.find('.edu')
+    if add != -1:
+      print(From)
+
+
 
             
 if __name__ == '__main__':
