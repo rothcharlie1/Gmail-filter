@@ -18,11 +18,7 @@ def main():
   importer()
   # print(FromList)
   college_label()
-  blah()
-  # print(FromList)
 
-def blah():
-  print(FromList)
 
 def importer():
     store = file.Storage('token.json')
@@ -57,11 +53,15 @@ def content_filter(mesg):
   from_val = mesg['payload']['headers'][from_index]['value'] #gets where mail is from
 
   subject_index = find_index(separated_list, 'name', 'Subject') #gets subject
-  subject_val = mesg['payload']['headers'][subject_index]['value']
+  try:
+    subject_val = mesg['payload']['headers'][subject_index]['value']
+  except:
+    pass
 
   snippet_val = mesg['snippet'] #gets snippet
+  print(id)
 
-  FromList.update({from_val : id}) # Appends email address and id , DOES NOT WORK
+  # FromList.update({from_val : id}) # Appends email address and id , DOES NOT WORK
     
   # print(from_val) #outputs the 3 parameters of each email
   # print(subject_val)
