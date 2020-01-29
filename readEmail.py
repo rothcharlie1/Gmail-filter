@@ -6,7 +6,6 @@ import base64
 from apiclient import errors
 from httplib2 import Http
 from email.mime.text import MIMEText
-import parseEmail
 import json
 
 SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
