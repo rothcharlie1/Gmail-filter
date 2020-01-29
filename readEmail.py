@@ -17,15 +17,11 @@ CollegeID = ''
 SavedID = {}
 
 def main():
-  # parseEmail.college_label()
   importer()
-  # print(FromList)
   college_label()
   edu_search()
   for i in idList:
     ModifyMessage(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', msg_id=i, msg_labels=CreateMsgLabels() )
-  # print(idList)
-  # print(CollegeID)
 
 
 def importer():
