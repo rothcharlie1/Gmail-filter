@@ -7,17 +7,25 @@ from apiclient import errors
 from httplib2 import Http
 from email.mime.text import MIMEText
 import parseEmail
+import json
 
 SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
 
 FromList = {}
-labelsID = []
+labelNames = []
+idList = []
+CollegeID = ''
 
 def main():
   # parseEmail.college_label()
   importer()
   # print(FromList)
   college_label()
+  edu_search()
+  for i in idList:
+    ModifyMessage(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', msg_id=i, msg_labels=CreateMsgLabels() )
+  # print(idList)
+  # print(CollegeID)
 
 
 def importer():
@@ -30,15 +38,15 @@ def importer():
      # Call the Gmail API to fetch INBOX
     results = service.users().messages().list(userId='me',labelIds = ['INBOX']).execute()  #fetches messages
     messages = results.get('messages', [])
-
-    idList = []  
+  
     if not messages:
       print ("No messages found.")
     else:
       for message in messages:
         msg = service.users().messages().get(userId='me', id=message['id']).execute()  #loop through all messages, pull out message, add id to the list of ids, and run the content filter
-        idList.append(message['id'])
-        content_filter(msg)
+        # idList.append(message['id'])
+        doodoo=message['id']
+        content_filter(msg, doodoo)
   
 def find_index(lst: list, key, value): #this method finds a specific value for a specific key in a list and returns the index of it
     for i, dic in enumerate(lst):
@@ -46,7 +54,7 @@ def find_index(lst: list, key, value): #this method finds a specific value for a
         return i
     return None
 
-def content_filter(mesg):    
+def content_filter(mesg, doodoo):    
   separated_list = mesg['payload']['headers'] #location of list of headers
     
   from_index = find_index(separated_list, 'name', 'From') 
@@ -59,9 +67,8 @@ def content_filter(mesg):
     pass
 
   snippet_val = mesg['snippet'] #gets snippet
-  print(id)
 
-  # FromList.update({from_val : id}) # Appends email address and id , DOES NOT WORK
+  FromList.update({from_val : doodoo}) # Appends email address and id , DOES NOT WORK
     
   # print(from_val) #outputs the 3 parameters of each email
   # print(subject_val)
@@ -98,7 +105,7 @@ def CreateMsgLabels():
   Returns:
     A label update object.
   """
-  return {'removeLabelIds': [], 'addLabelIds': ['College']}
+  return {'removeLabelIds': [], 'addLabelIds': [CollegeID]}
 
 def CreateLabel(service, user_id, label_object):
   """Creates a new label within user's mailbox, also prints Label ID.
@@ -114,7 +121,8 @@ def CreateLabel(service, user_id, label_object):
   """
   try:
     label = service.users().labels().create(userId=user_id, body=label_object).execute()
-    # print(label['id'])
+    global CollegeID
+    CollegeID = label['id']
     return label
   except errors.HttpError as error:
     print('An error occurred: %s' % error)
@@ -141,7 +149,7 @@ def ListLabels(service, user_id):
     response = service.users().labels().list(userId=user_id).execute()
     labels = response['labels']
     for label in labels:
-      labelsID.append(label['name'])
+      labelNames.append(label['name'])
     return labels
   except errors.HttpError as error:
     print ('An error occurred: %s' % error)
@@ -151,13 +159,13 @@ def edu_search(): # Searches for ".edu" in email address
   for From in FromList:
     add = From.find('.edu')
     if add != -1:
-      print(From)
+      idList.append(FromList.get(From))
 
 def college_label():
   ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me')
   College = False
 
-  for i in labelsID: # Finds if there is already a label that has been named "College"
+  for i in labelNames: # Finds if there is already a label that has been named "College"
     if i == 'College':
       College = True
       break
@@ -167,7 +175,7 @@ def college_label():
   else:
     print('Label Exists')
   # edu_search()
-  print(FromList)
+  # print(FromList)
 
 
             
