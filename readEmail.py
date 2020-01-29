@@ -15,6 +15,7 @@ FromList = {}
 labelNames = []
 idList = []
 CollegeID = ''
+SavedID = {}
 
 def main():
   # parseEmail.college_label()
@@ -122,7 +123,12 @@ def CreateLabel(service, user_id, label_object):
   try:
     label = service.users().labels().create(userId=user_id, body=label_object).execute()
     global CollegeID
+    global SavedID
     CollegeID = label['id']
+    SavedID.update({'ID': label['id']})
+    with open('label.txt', 'w') as outfile:
+      json.dump(SavedID, outfile)
+
     return label
   except errors.HttpError as error:
     print('An error occurred: %s' % error)
@@ -162,18 +168,24 @@ def edu_search(): # Searches for ".edu" in email address
       idList.append(FromList.get(From))
 
 def college_label():
+  global CollegeID
   ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me')
   College = False
 
   for i in labelNames: # Finds if there is already a label that has been named "College"
-    if i == 'College':
+    if i == 'Matt and Charlie\'s College Filter':
       College = True
       break
   if College == False: # Creates a "College" label if it is not already a label
     print('Label Created')
-    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=MakeLabel(label_name='College', mlv='show', llv='labelShow'))
+    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), 
+    user_id='me', label_object=MakeLabel(label_name='Matt and Charlie\'s College Filter', mlv='show', llv='labelShow'))
   else:
     print('Label Exists')
+    with open('label.txt') as json_file:
+      SavedID = json.load(json_file)
+      CollegeID=SavedID['ID']
+
   # edu_search()
   # print(FromList)
 
