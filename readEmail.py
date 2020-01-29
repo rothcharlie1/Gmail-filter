@@ -17,7 +17,7 @@ def main():
   # parseEmail.college_label()
   importer()
   # print(FromList)
-  parseEmail.college_label()
+  college_label()
   blah()
   # print(FromList)
 
@@ -44,7 +44,7 @@ def importer():
         idList.append(message['id'])
         content_filter(msg)
   
-def find_index(lst, key, value): #this method finds a specific value for a specific key in a list and returns the index of it
+def find_index(lst: list, key, value): #this method finds a specific value for a specific key in a list and returns the index of it
     for i, dic in enumerate(lst):
       if dic[key] == value:
         return i
@@ -146,8 +146,28 @@ def ListLabels(service, user_id):
   except errors.HttpError as error:
     print ('An error occurred: %s' % error)
 
+def edu_search(): # Searches for ".edu" in email address
+  test = []
+  for From in FromList:
+    add = From.find('.edu')
+    if add != -1:
+      print(From)
 
+def college_label():
+  ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me')
+  College = False
 
+  for i in labelsID: # Finds if there is already a label that has been named "College"
+    if i == 'College':
+      College = True
+      break
+  if College == False: # Creates a "College" label if it is not already a label
+    print('Label Created')
+    CreateLabel(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', label_object=MakeLabel(label_name='College', mlv='show', llv='labelShow'))
+  else:
+    print('Label Exists')
+  # edu_search()
+  print(FromList)
 
 
             

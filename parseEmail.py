@@ -23,9 +23,3 @@ def college_label():
   # edu_search()
   print(readEmail.FromList)
 
-def edu_search(): # Searches for ".edu" in email address
-  test = []
-  for From in readEmail.FromList:
-    add = From.find('.edu')
-    if add != -1:
-      print(From)
