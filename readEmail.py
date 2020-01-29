@@ -16,6 +16,7 @@ idList = []
 CollegeID = ''
 SavedID = {}
 
+# Acting as the main method of the code
 def main():
   importer()
   college_label()
@@ -24,7 +25,7 @@ def main():
     ModifyMessage(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', msg_id=i, msg_labels=CreateMsgLabels() )
 
 
-def importer():
+def importer(): # Imports all the emails from the gmail account
     store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
@@ -50,7 +51,7 @@ def find_index(lst: list, key, value): #this method finds a specific value for a
         return i
     return None
 
-def content_filter(mesg, doodoo):    
+def content_filter(mesg, doodoo):    # Finds all email addresses and messages ID's and pairs them
   separated_list = mesg['payload']['headers'] #location of list of headers
     
   from_index = find_index(separated_list, 'name', 'From') 
@@ -71,7 +72,7 @@ def content_filter(mesg, doodoo):
   # print(snippet_val)
   # print()
 
-def ModifyMessage(service, user_id, msg_id, msg_labels):
+def ModifyMessage(service, user_id, msg_id, msg_labels): # Adds labels to a message
   """Modify the Labels on the given Message.
 
   Args:
@@ -95,7 +96,7 @@ def ModifyMessage(service, user_id, msg_id, msg_labels):
     print ('An error occurred: %s' % error)
 
 
-def CreateMsgLabels():
+def CreateMsgLabels(): # Adds and removes labels, built for the the Modify Message method
   """Create object to update labels.
 
   Returns:
@@ -103,7 +104,7 @@ def CreateMsgLabels():
   """
   return {'removeLabelIds': [], 'addLabelIds': [CollegeID]}
 
-def CreateLabel(service, user_id, label_object):
+def CreateLabel(service, user_id, label_object): # Creates a label in the Gmail Account and saves label id to .txt file
   """Creates a new label within user's mailbox, also prints Label ID.
 
   Args:
@@ -129,7 +130,7 @@ def CreateLabel(service, user_id, label_object):
     print('An error occurred: %s' % error)
 
 
-def MakeLabel(label_name, mlv='show', llv='labelShow'):
+def MakeLabel(label_name, mlv='show', llv='labelShow'): # Makes label and label ID for the Create Label method
   """Create Label object.
 
   Args:
@@ -145,7 +146,7 @@ def MakeLabel(label_name, mlv='show', llv='labelShow'):
            'labelListVisibility': llv}
   return label
 
-def ListLabels(service, user_id):
+def ListLabels(service, user_id): # Gets all the labels that are currently in the gmail account
   try:
     response = service.users().labels().list(userId=user_id).execute()
     labels = response['labels']
@@ -162,7 +163,7 @@ def edu_search(): # Searches for ".edu" in email address
     if add != -1:
       idList.append(FromList.get(From))
 
-def college_label():
+def college_label(): # Searches for the college label and decides whether or not to create the label in the gmail account
   global CollegeID
   ListLabels(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me')
   College = False
