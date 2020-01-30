@@ -17,21 +17,13 @@ Full, unabridged code is in the readEmail.py file.
 Here we authenticate the user's Google account and retrieve a set of messages from the user's account. 
 
     store = file.Storage('token.json')
-
     creds = store.get()
-
     if not creds or creds.invalid:
-
-    flow = client.flow_from_clientsecrets('client_secret_44702673440-vq3k3r554g4oh4lod094kl1okbmga5c7.apps.googleusercontent.com.json', SCOPES) #i think this part establishes the connection between the program and the email and does authorization
-
-    creds = tools.run_flow(flow, store)
-
+      flow = client.flow_from_clientsecrets('client_secret_44702673440-vq3k3r554g4oh4lod094kl1okbmga5c7.apps.googleusercontent.com.json', SCOPES) #i think this part establishes the connection between the program and the email and does authorization
+      creds = tools.run_flow(flow, store)
     service = build('gmail', 'v1', http=creds.authorize(Http()))
-
     \# Call the Gmail API to fetch INBOX
-
     results = service.users().messages().list(userId='me',labelIds = ['INBOX']).execute() #fetches messages
-
     messages = results.get('messages', [])
 
 Here we find find a dictionary in a list of dictionaries by a specific key-value pair. This took way longer than it should have. 
