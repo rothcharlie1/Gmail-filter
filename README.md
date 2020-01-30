@@ -67,7 +67,7 @@ And finally here is the most important method: here we list the labels and check
 
 First, clone or download the repository. 
 
-Run the shortcut GMail College Filter - MCCR. Preferably, put this shortcut on your desktop to run this filter every once in a while. It does not automatically run on new emails. 
+Run the file run.bat. Preferably, put a shortcut to it on your desktop to run this filter every once in a while. It does not automatically run on new emails. 
 
 A command line interface will appear, and you will be required to sign in to your Google account. Our application does not send any information to any outside source, even us. Your emails are safe. 
 
@@ -75,4 +75,4 @@ After authentication, a label will be created for you, and your emails will slow
 
 This will take a while. 
 
-Run the shortcut whenever you want to filter any new emails. 
+Run the file whenever you want to filter any new emails. 
