@@ -23,6 +23,7 @@ def main():
   edu_search()
   for i in idList:
     ModifyMessage(service=build('gmail', 'v1', http=file.Storage('token.json').get().authorize(Http())), user_id='me', msg_id=i, msg_labels=CreateMsgLabels() )
+  print('Emails have been labeled.')
 
 
 def importer(): # Imports all the emails from the gmail account
